@@ -1,17 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { Role } from '@prisma/client'
 
 const secret = process.env.JWT_SECRET || 'secret'
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
   const token = req.cookies.token
-  if (!token) return res.status(401).json({ message: 'Unauthenticated' })
+  if (!token) {
+    res.status(401).json({ message: 'Unauthenticated' })
+    return
+  }
 
   try {
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, secret) as { id: number; role: Role }
     req.user = decoded
     next()
+    return
   } catch {
-    return res.status(403).json({ message: 'Invalid token' })
+    res.status(403).json({ message: 'Invalid token' })
+    return
   }
 }

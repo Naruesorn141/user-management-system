@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true
+    // อย่าใส่ typeRoots เพราะ default ก็จะมอง node_modules/@types + include 
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
